@@ -1,0 +1,62 @@
+Your challenge is to construct an app with a personalized interface that enables users to conduct a customized query to tell them
+the likelihood of “very hot,” “very cold,” “very windy,” “very wet,” or “very uncomfortable”
+conditions for the location and time they specify.
+
+
+
+Request: Get "NasaWeatherForecast/api/WeatherCondition?longitude=34.0522&latitude=-118.2437&date=2024-07-15&time=14:00"
+
+
+https://power.larc.nasa.gov/api/pages/?urls.primaryName=Hourly#/
+https://power.larc.nasa.gov/docs/tutorials/parameters/
+https://power.larc.nasa.gov/api/pages/?urls.primaryName=Manager#/System%20Utilities/groupings_list_api_system_manager_system_groupings_get
+
+
+https://power.larc.nasa.gov/parameters/ => if u want to see the parametars that you can pass
+, also look at the naming conventions which are
+
+Naming Convention¶
+POWER uses a standard naming convention across all the services in the POWER Data Services; this enables users to access data from any of the power services using the same naming convention.
+
+Names are typically less than 20 characters
+Abbreviated words are separated by a _.
+Grouped parameters lead with the common name (e.g. T2M: T2M_MAX, T2M_MIN, T2M_RANGE)
+
+
+
+Code Structure:
+    NasaAPI
+        GetReadyAPIResponse
+        NasaAPIRequestInput
+        NasaPowerAPICalling
+
+    Analysis
+        all analysis stuff in one file
+
+    Utillities
+        CacheUtilities
+        Validation
+
+    WeatherBackend_IO
+        WeatherRequest
+        WeatherResponse
+
+    main => one end point (post) wil return the response in this structure
+
+{
+  "Data": {
+    "T2M": {
+      "mean":
+      "probability":
+      "foreCastPrediction":
+      "previousDates": {
+        "20150902": 31.41,
+        ...
+      },
+      "minValue":
+      "maxValue":
+    }
+    ... rest of variables
+  },
+  "Success": true
+}
