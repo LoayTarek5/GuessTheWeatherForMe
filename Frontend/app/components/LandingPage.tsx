@@ -2,7 +2,7 @@
 import "../style/landingPage.css";
 import "../globals.css";
 import LandingCards from "./LandingCards";
-import handleNext from "./Configuration";
+// import handleNext from "./Configuration";
 interface LandingPageProps {
   onStartAnalysis: () => void;
 }

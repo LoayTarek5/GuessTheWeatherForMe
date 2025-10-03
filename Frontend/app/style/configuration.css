@@ -1,0 +1,193 @@
+.inputs-container {
+  padding: 30px 0px;
+}
+.inputs-container .container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.input-card {
+  padding: 24px;
+  background-color: hsl(var(--card));
+  border-width: 1px;
+  border-color: hsl(var(--border) / 0.2);
+  border-radius: var(--radius);
+}
+
+.input-card .header p {
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  margin: 10px 0;
+}
+.var-grid {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+.var-grid:hover {
+  background-color: hsl(220deg 20.92% 8.35% / 50%);
+}
+.check-box {
+  width: 20px;
+  height: 20px;
+  border: 2px solid hsl(var(--primary));
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.var-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.var-info p {
+  font-size: 14px;
+}
+.info {
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.threshold-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0px 0px 10px 40px;
+  color: hsl(var(--muted-foreground));
+}
+.threshold-content label {
+  font-size: 13px;
+}
+.threshold-content span {
+  font-size: 13px;
+}
+.threshold-content input {
+  --tw-ring-offset-color: hsl(var(--background));
+  line-height: 1rem;
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--input));
+  border-width: 1px;
+  border-radius: calc(var(--radius) - 2px);
+  width: 80px;
+  height: 32px;
+  color: white;
+  padding: 0 15px;
+  font-size: 14px;
+  border: 0;
+  outline: 0;
+}
+
+.date-header {
+  background: hsl(var(--card) / 0.5);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.map-btns {
+  display: flex;
+  background-color: hsl(var(--muted));
+  border-radius: calc(var(--radius) - 2px);
+  padding: 7px 5px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+.map-btns button {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px;
+  border-radius: 10px;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.map-btns button:hover {
+  background-color: hsl(var(--background));
+}
+
+.map-btns button.active {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.coordinates-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 15px 0;
+}
+.coordinates-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+.coordinates-content label {
+  display: block;
+  font-size: 13px;
+}
+.coordinates-content input {
+  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--input) / 0.5);
+  border: 1px solid;
+  border-color: hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  padding: 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.currloc-btn {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: white;
+  background-color: hsl(var(--background));
+  border: 1px solid;
+  border-color: hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition-smooth);
+}
+.currloc-btn:hover {
+  background-color: hsl(var(--accent));
+}
+.selected-location {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: hsl(var(--primary));
+  background-color: hsl(var(--input) / 0.5);
+  border: 1px solid;
+  border-color: hsl(var(--primary) / 0.2);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 12px;
+  font-size: 12px;
+  margin-top: 18px;
+  font-weight: 600;
+}
