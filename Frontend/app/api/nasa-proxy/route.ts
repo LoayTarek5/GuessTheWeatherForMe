@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     
     console.log('Proxying request to NASA API:', body);
     
-    const response = await fetch('https://example.com/NasaAPI/weatherCondition/query', {
+    const response = await fetch('https://nb-api-lovat.vercel.app/NasaAPI/weatherCondition/query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

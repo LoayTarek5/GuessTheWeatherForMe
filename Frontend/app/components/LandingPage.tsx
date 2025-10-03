@@ -2,13 +2,11 @@
 import "../style/landingPage.css";
 import "../globals.css";
 import LandingCards from "./LandingCards";
-// import handleNext from "./Configuration";
 interface LandingPageProps {
   onStartAnalysis: () => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStartAnalysis }) => {
-
   const handleViewChallenge = () => {
     window.open("https://www.spaceappschallenge.org/", "_blank");
   };
