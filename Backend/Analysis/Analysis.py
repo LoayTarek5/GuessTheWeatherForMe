@@ -64,10 +64,10 @@ def get_result(JSONResponse: dict, required_date: str, parameters: dict):
         result[param] = {
             "mean": float(get_mean(df, param)),  # np.float64 -> float
             "probability": float(get_probability(df, param, thres)),
-            "forecastPrediction": float(predict_next(df, param)),
+            "foreCastPrediction": float(predict_next(df, param)),
             "previousDates": get_column(df, param).to_dict(),  # Series -> dict[str, float]
-            "min": float(get_min(df, param)),
-            "max": float(get_max(df, param))
+            "minValue": float(get_min(df, param)),
+            "maxValue": float(get_max(df, param))
         }
 
     return result
