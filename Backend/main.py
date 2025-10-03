@@ -30,18 +30,16 @@ async def ConstructWeatherQuery(weatherRequest: WeatherRequest):
 
     # Call Get Ready Power Response
     nasa_response = await GetReadyPowerApiResponse(
-        weatherRequest.FutureDate,
-        weatherRequest.Longitude,
-        weatherRequest.Longitude,
-        weatherRequest.Parameters
+        weatherRequest.futureDate,
+        weatherRequest.longitude,
+        weatherRequest.latitude,
+        weatherRequest.parameters
     )
 
     # Analysis
-    final_result = get_result(nasa_response, weatherRequest.FutureDate, weatherRequest.Parameters)
+    final_result = get_result(nasa_response, weatherRequest.futureDate, weatherRequest.parameters)
 
-    response = WeatherResponse()
-    response.Data = final_result
-    response.Success = True
+    response = WeatherResponse(Data=final_result, Success=True)
 
     end_time = time.time()  # <-- stop stopwatch
     elapsed = end_time - start_time

@@ -32,7 +32,7 @@ def predict_next(df: pd.DataFrame, param: str):
     return next_val
 
 
-def get_column(df: pd.DataFrame, param: str) :
+def get_column(df: pd.DataFrame, param: str):
     df = clean(df, param)
     return df[param]
 
@@ -65,7 +65,7 @@ def get_result(JSONResponse: dict, required_date: str, parameters: dict):
             "mean": float(get_mean(df, param)),  # np.float64 -> float
             "probability": float(get_probability(df, param, thres)),
             "forecastPrediction": float(predict_next(df, param)),
-            "previousDates": dict(get_column(df,param)),  # Series -> dict[str, float]
+            "previousDates": get_column(df, param).to_dict(),  # Series -> dict[str, float]
             "min": float(get_min(df, param)),
             "max": float(get_max(df, param))
         }

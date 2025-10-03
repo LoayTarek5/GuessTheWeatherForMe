@@ -22,8 +22,8 @@ async def GetReadyPowerApiResponse(FutureDate: str, longitude: float, latitude: 
 
     if cached_response:
         cached_response = await AddNotIncludedParameters(cached_response, list(threshHolds.keys()),
-                                                   longitude, latitude,
-                                                   DEFAULT_END_DATE)
+                                                         longitude, latitude,
+                                                         DEFAULT_END_DATE)
         return cached_response
 
     finalEndDate = DEFAULT_END_DATE
@@ -36,7 +36,7 @@ async def GetReadyPowerApiResponse(FutureDate: str, longitude: float, latitude: 
         finalEndDate = END_DATE_BACKWARD_COMPATABLE
 
     nasaApiInput = NasaAPIRequestInput(DEFAULT_START_DATE, finalEndDate, longitude,
-                                       latitude, threshHolds)
+                                       latitude, list(threshHolds.keys()))
     response = CallPowerAPI(nasaApiInput)
 
     await cache.set_dict(cacheKey, response)

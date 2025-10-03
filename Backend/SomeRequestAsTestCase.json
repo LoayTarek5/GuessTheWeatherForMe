@@ -1,0 +1,28 @@
+
+
+/*
+
+T2M : 5
+WS2M : 12
+PRECTOTCORR: 22
+RH2M: 0.5  not valid, it should be 50 aka 50%)
+CLOUD_AMT: 0.5 ( not valid, it should be 50 aka 50%)
+AOD_55: 0.4 (valid)
+SNODP: 1
+*/
+
+
+{
+  "futureDate": "20260207",
+  "longitude": 0,
+  "latitude": 0,
+  "parameters": {
+    "T2M" : 20,
+    "WS2M" : 12,
+    "PRECTOTCORR": 22,
+    "RH2M": 50,
+    "CLOUD_AMT": 50,
+    "AOD_55": 0.4,
+    "SNODP": 1
+  }
+}
