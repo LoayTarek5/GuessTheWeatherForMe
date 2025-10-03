@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import type { ReactNode } from "react";
 import "../style/landingPage.css";
 import "../globals.css";
@@ -12,13 +12,11 @@ type LandingCardsProps = {
 function LandingCards(props: LandingCardsProps) {
   return (
     <>
-      
-        <div className="landing-card glass">
-          <div className="icon">{props.icon}</div>
-          <h3>{props.header}</h3>
-          <p>{props.info}</p>
-        </div>
-      
+      <div className="landing-card glass">
+        <div className="icon">{props.icon}</div>
+        <h3>{props.header}</h3>
+        <p>{props.info}</p>
+      </div>
     </>
   );
 }

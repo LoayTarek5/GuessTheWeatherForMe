@@ -54,7 +54,6 @@ export default function Home() {
         </>
       ) : (
         <Analysis onBackToConfig={handleBackToConfig} />
-        
       )}
     </WeatherProvider>
   );
