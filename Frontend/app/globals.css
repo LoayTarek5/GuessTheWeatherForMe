@@ -1,0 +1,304 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --background: 220 25% 8%;
+  --foreground: 210 40% 98%;
+
+  --card: 220 20% 12%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 220 20% 12%;
+  --popover-foreground: 210 40% 98%;
+
+  /* NASA Blue Primary */
+  --primary: 220 100% 45%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 220 100% 65%;
+
+  /* Space Secondary */
+  --secondary: 240 15% 20%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 220 20% 15%;
+  --muted-foreground: 215 20% 65%;
+
+  /* Cosmic Accent */
+  --accent: 280 60% 45%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 220 20% 25%;
+  --input: 220 20% 15%;
+  --ring: 220 100% 65%;
+
+  /* Weather Data Colors */
+  --weather-temp: 25 95% 55%;
+  --weather-wind: 195 95% 55%;
+  --weather-precip: 220 95% 65%;
+  --weather-humidity: 260 95% 65%;
+  --weather-cloud: 200 30% 70%;
+  --weather-aerosol: 35 95% 55%;
+  --weather-snow: 180 50% 85%;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(var(--primary)),
+    hsl(var(--primary-glow))
+  );
+  --gradient-space: linear-gradient(180deg, hsl(220 25% 8%), hsl(240 30% 5%));
+  --gradient-cosmic: linear-gradient(
+    45deg,
+    hsl(var(--accent)),
+    hsl(280 80% 60%)
+  );
+  --gradient-hero: linear-gradient(135deg, hsl(220 100% 20%), hsl(280 60% 25%));
+
+  /* Shadows (modern space-separated HSL + alpha syntax) */
+  --shadow-cosmic: 0 25px 50px -12px hsl(var(--primary) / 0.25);
+  --shadow-card: 0 10px 30px -5px hsl(220 30% 5% / 0.5);
+  --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+
+  /* Animations */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  --radius: 0.75rem;
+
+  /* Sidebar tokens (kept as H S% L%) */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+/* Light mode variants for NASA theme (switch by placing .light on an ancestor) */
+.light {
+  --background: 210 20% 98%;
+  --foreground: 220 25% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 25% 15%;
+  --border: 220 20% 85%;
+  --input: 220 20% 95%;
+  --muted: 210 20% 95%;
+  --muted-foreground: 220 15% 45%;
+}
+
+/* -------------------------
+   Global element defaults
+   ------------------------- */
+* {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+  padding: 0;
+  margin: 0;
+}
+
+/* Body: background gradient + fallback color + typography */
+body {
+  background: var(--gradient-space);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: var(--transition-smooth);
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+  --tw-gradient-from: #0f172a var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(15 23 42 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  --tw-gradient-to: #020617 var(--tw-gradient-to-position);
+  color: hsl(var(--foreground));
+  font-family: Inter, sans-serif;
+}
+
+/* -------------------------
+   Cosmic animations & utilities
+   ------------------------- */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: var(--shadow-glow);
+  }
+  50% {
+    box-shadow: 0 0 60px hsl(var(--primary-glow) / 0.5);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Utility classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--primary-glow) / 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* -------------------------
+   Weather variable color helpers
+   ------------------------- */
+.weather-temp {
+  color: hsl(var(--weather-temp));
+}
+.weather-wind {
+  color: hsl(var(--weather-wind));
+}
+.weather-precip {
+  color: hsl(var(--weather-precip));
+}
+.weather-humidity {
+  color: hsl(var(--weather-humidity));
+}
+.weather-cloud {
+  color: hsl(var(--weather-cloud));
+}
+.weather-aerosol {
+  color: hsl(var(--weather-aerosol));
+}
+.weather-snow {
+  color: hsl(var(--weather-snow));
+}
+
+.glass {
+  background: color-mix(in srgb, hsl(var(--card)) 10%, transparent);
+  /* `color-mix` is modern — fallback to hsl with alpha: */
+  background: hsl(var(--card) / 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--border) / 0.3);
+  border-radius: var(--radius);
+  transition: var(--transition-smooth);
+}
+
+.glass-strong {
+  background: hsl(var(--card) / 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--border) / 0.2);
+  border-radius: var(--radius);
+}
+
+/* Small helpers for card shadows and cosmic glow */
+.card {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 1rem;
+}
+
+.cosmic-glow {
+  box-shadow: var(--shadow-cosmic);
+}
+
+/* Primary button example (converted from Tailwind variables) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gradient-primary);
+  color: hsl(var(--primary-foreground));
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--primary) / 0.4);
+  box-shadow: var(--shadow-glow);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 50px hsl(var(--primary-glow) / 0.6);
+}
+
+/* Input styling using the input token */
+.input {
+  background: hsl(var(--input));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem 0.75rem;
+  border-radius: calc(var(--radius) / 2);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.12);
+  border-color: hsl(var(--ring));
+}
+
+/* Accessibility note: keep focus-visible outline for keyboard users */
+:focus-visible {
+  outline: 2px dashed hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+a {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Small */
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+/* Medium */
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+/* Large */
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
