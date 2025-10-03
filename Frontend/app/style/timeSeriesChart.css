@@ -1,0 +1,183 @@
+/* Main container */
+.timeseries-container {
+  background: hsl(var(--card));
+  border-radius: var(--radius);
+  padding: 2rem;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Title and subtitle */
+.timeseries-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timeseries-subtitle {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 1.5rem;
+}
+
+/* Date range slider container */
+.date-range-container {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: hsl(var(--card) / 0.5);
+  border-radius: calc(var(--radius) / 2);
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+.date-range-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Slider wrapper and tracks */
+.slider-wrapper {
+  position: relative;
+  height: 40px;
+}
+
+.slider-track-bg {
+  position: absolute;
+  top: 17px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.slider-track-active {
+  position: absolute;
+  top: 17px;
+  height: 6px;
+  background: hsl(var(--primary));
+  border-radius: 3px;
+}
+
+/* Range slider inputs */
+.range-slider {
+  position: absolute;
+  width: 100%;
+  top: -6px;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 40px;
+  background: transparent;
+  pointer-events: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: all;
+}
+
+.range-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: all;
+}
+
+.range-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+}
+
+.range-slider::-moz-range-track {
+  height: 6px;
+  background: transparent;
+}
+
+/* Slider labels */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Chart container */
+.chart-container {
+  background: hsl(var(--background));
+  border-radius: calc(var(--radius) / 2);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  min-height: 400px;
+}
+
+/* Custom tooltip */
+.custom-tooltip {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) / 2);
+  padding: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+.tooltip-entry {
+  font-size: 0.8rem;
+  margin: 0.25rem 0;
+}
+
+/* Legend container */
+.legend-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Legend items */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: calc(var(--radius) / 2);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.legend-item.active {
+  opacity: 1;
+}
+
+.legend-item.inactive {
+  opacity: 0.5;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+}

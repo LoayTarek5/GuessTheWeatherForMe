@@ -1,0 +1,245 @@
+.analysis-page {
+  min-height: 100vh;
+  background: var(--gradient-space);
+  padding: 3rem 1rem;
+}
+
+.analysis-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Title area */
+.page-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-size: 0.9rem;
+}
+
+.secondary-btn {
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+.gradient-btn {
+  background: var(--gradient-primary);
+  color: hsl(var(--primary-foreground));
+}
+
+.destructive-btn {
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+/* Glass panels reuse existing .glass styles - we only add spacing here */
+.config-panel {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: var(--radius);
+}
+
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.config-item {}
+
+.config-subheading {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.5rem;
+}
+
+.config-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.selected-vars {
+  margin-top: 1.5rem;
+}
+
+.small-muted {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.75rem;
+}
+
+.vars-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.var-chip {
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: calc(var(--radius) / 2);
+  font-size: 0.9rem;
+}
+
+.var-chip-muted {
+  margin-left: 0.5rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Loading / Empty / Result panels */
+.loading-panel,
+.result-panel,
+.empty-panel {
+  padding: 3rem;
+  text-align: center;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+}
+
+.emoji-large {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.loading-title,
+.result-title,
+.empty-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.muted {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Error panel */
+.error-panel {
+  background: hsl(var(--destructive) / 0.1);
+  border: 1px solid hsl(var(--destructive));
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--destructive));
+}
+
+.error-text {
+  color: hsl(var(--destructive));
+}
+
+/* Parameters grid */
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.param-card {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+}
+
+.param-card--ok {
+  border: 1px solid hsl(var(--primary) / 0.3);
+}
+
+.param-card--bad {
+  border: 1px solid hsl(var(--destructive) / 0.3);
+}
+
+.param-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-icon {
+  font-size: 1.5rem;
+}
+
+.status-ok {
+  color: hsl(var(--primary));
+}
+
+.status-bad {
+  color: hsl(var(--destructive));
+}
+
+/* Stat rows */
+.stat-grid {
+  display: grid;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: hsl(var(--card) / 0.5);
+  border-radius: calc(var(--radius) / 3);
+}
+
+.stat-value {
+  font-weight: 600;
+}
+
+.text-primary {
+  color: hsl(var(--primary));
+}
+
+.text-destructive {
+  color: hsl(var(--destructive));
+}
+
+/* Donut & timeseries wrappers */
+.donut-wrapper {
+  margin-bottom: 2rem;
+}
+
+.timeseries-wrapper {
+  margin-bottom: 2rem;
+}
