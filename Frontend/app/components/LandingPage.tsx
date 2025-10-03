@@ -8,7 +8,7 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStartAnalysis }) => {
   const handleViewChallenge = () => {
-    window.open("https://www.spaceappschallenge.org/", "_blank");
+    window.open("https://github.com/MohamedKamal000/GuessTheWeatherForMe/", "_blank");
   };
 
   const cards = [
@@ -37,8 +37,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartAnalysis }) => {
           <div className="landing-content">
             <p className="animate-float">🛰️2025 NASA Space Apps Challenge</p>
             <h1>
-              Will It Rain On My{" "}
-              <span className="animate-shimmer">Parade?</span>
+              Guess The <span className="animate-shimmer">Weather</span> For Me{" "}
             </h1>
             <p className="info">
               Predict weather conditions for your outdoor events using NASA

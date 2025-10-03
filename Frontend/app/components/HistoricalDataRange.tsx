@@ -25,6 +25,29 @@ interface TimeSeriesChartProps {
   >;
 }
 
+interface WeatherParameter {
+  id: string;
+  name: string;
+  color: string;
+  unit: string;
+  data: Record<string, number>;
+}
+
+interface ChartDataPoint {
+  date: string;
+  [key: string]: string | number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>;
+  label?: string;
+}
+
 const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   parametersData,
 }) => {
@@ -32,7 +55,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const weatherMetadata: Record<
     string,
     { name: string; color: string; unit: string }
-  > = {
+  > = useMemo(() => ({
     T2M: { name: "Temperature", color: "#CD8B3A", unit: "°C" },
     WS2M: { name: "Wind Speed", color: "#06B6D4", unit: "m/s" },
     PRECTOTCORR: { name: "Precipitation", color: "#3B82F6", unit: "mm" },
@@ -40,10 +63,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     CLOUD_AMT: { name: "Cloud Amount", color: "#94A3B8", unit: "%" },
     AOD_55: { name: "Aerosol", color: "#F59E0B", unit: "AOD" },
     SNODP: { name: "Snow Depth", color: "#06B6D4", unit: "cm" },
-  };
+  }), []);
 
   // Get parameter info
-  const parameters = useMemo(() => {
+  const parameters = useMemo((): WeatherParameter[] => {
     return Object.entries(parametersData).map(([paramId, data]) => {
       const metadata = weatherMetadata[paramId] || {
         name: paramId,
@@ -58,7 +81,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         data: data.previousDates,
       };
     });
-  }, [parametersData]);
+  }, [parametersData, weatherMetadata]);
 
   const [visibleParameters, setVisibleParameters] = useState<
     Record<string, boolean>
@@ -81,18 +104,18 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const [dateRange, setDateRange] = useState({ start: minYear, end: maxYear });
 
   // Transform data for Recharts
-  const chartData = useMemo(() => {
+  const chartData = useMemo((): ChartDataPoint[] => {
     const filteredDates = allDates.filter((date) => {
       const year = parseInt(date.substring(0, 4));
       return year >= dateRange.start && year <= dateRange.end;
     });
 
     return filteredDates.map((date) => {
-      const dataPoint: any = { date };
+      const dataPoint: ChartDataPoint = { date };
 
       parameters.forEach((param) => {
         if (visibleParameters[param.name]) {
-          dataPoint[param.name] = param.data[date];
+          dataPoint[param.name] = param.data[date] || 0;
         }
       });
 
@@ -108,22 +131,23 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   // Custom tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
-      const year = label.slice(0, 4);
-      const month = label.slice(4, 6);
-      const day = label.slice(6, 8);
-      const d = new Date(year, month, day);
+      const dateLabel = label || '';
+      const year = dateLabel.slice(0, 4);
+      const month = dateLabel.slice(4, 6);
+      const day = dateLabel.slice(6, 8);
+      const d = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
       const options: Intl.DateTimeFormatOptions = {
         year: "numeric",
         month: "short",
         day: "numeric",
       };
-      label = d.toLocaleDateString(undefined, options);
+      const formattedLabel = d.toLocaleDateString(undefined, options);
       return (
         <div className="custom-tooltip">
-          <p className="tooltip-label">{label}</p>
-          {payload.map((entry: any, index: number) => {
+          <p className="tooltip-label">{formattedLabel}</p>
+          {payload.map((entry, index: number) => {
             const param = parameters.find((p) => p.name === entry.name);
             const unit = param?.unit || "";
             return (

@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+
 import { useWeather } from "../context/WeatherContext";
 import DonutChart from "./DonutChart";
 import TimeSeriesChart from "./HistoricalDataRange";
@@ -28,6 +29,93 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ onBackToConfig }) => {
   const selectedVars = Object.keys(configuration.selectedWeatherVars).filter(
     (key) => configuration.selectedWeatherVars[key]
   );
+  const [selectedChartVariable, setSelectedChartVariable] = useState<
+    string | null
+  >(selectedVars[0] || null);
+
+  const handleDownloadCSV = () => {
+    if (!analysisData?.results) return;
+
+    // Collect all unique historical dates from all parameters
+    const allDates = new Set<string>();
+    Object.values(analysisData.results.Data).forEach((data) => {
+      Object.keys(data.previousDates).forEach((date) => allDates.add(date));
+    });
+    const sortedDates = Array.from(allDates).sort();
+
+    // Prepare CSV headers
+    const headers = [
+      "Parameter",
+      "Mean",
+      "Probability",
+      "Forecast Prediction",
+      "Min Value",
+      "Max Value",
+      ...sortedDates,
+    ];
+
+    // Prepare CSV rows
+    const rows = Object.entries(analysisData.results.Data).map(
+      ([paramId, data]) => {
+        const historicalValues = sortedDates.map((date) =>
+          data.previousDates[date] !== undefined
+            ? data.previousDates[date].toString()
+            : ""
+        );
+
+        return [
+          paramId,
+          data.mean.toFixed(2),
+          data.probability.toFixed(2),
+          data.foreCastPrediction.toFixed(2),
+          data.minValue.toFixed(2),
+          data.maxValue.toFixed(2),
+          ...historicalValues,
+        ];
+      }
+    );
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+
+    // Download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `weather-analysis-${configuration.eventDate}.csv`;
+    link.click();
+  };
+
+  const handleDownloadJSON = () => {
+    if (!analysisData?.results) return;
+
+    const exportData = {
+      metadata: {
+        eventDate: configuration.eventDate,
+        location: {
+          latitude: parseFloat(configuration.latitude),
+          longitude: parseFloat(configuration.longitude),
+        },
+        exportDate: new Date().toISOString(),
+        selectedParameters: selectedVars,
+      },
+      configuration: {
+        thresholds: configuration.thresholds,
+      },
+      results: analysisData.results.Data,
+      dataSource: "NASA Earth Observation Data",
+    };
+
+    const jsonContent = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonContent], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `weather-analysis-${configuration.eventDate}.json`;
+    link.click();
+  };
 
   return (
     <div className="analysis-page">
@@ -108,6 +196,30 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ onBackToConfig }) => {
             </div>
           </div>
         </div>
+
+        {/* Download Options */}
+        {analysisData?.results && !isLoading && !analysisData.error && (
+          <div className="glass download-panel">
+            <h2 className="section-heading">📥 Export Data</h2>
+            <p className="muted" style={{ marginBottom: "1rem" }}>
+              Download your analysis results in your preferred format
+            </p>
+
+            <div
+              style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
+            >
+              <button onClick={handleDownloadCSV} className="btn secondary-btn">
+                <i className="fa-solid fa-file-csv"></i> Download CSV
+              </button>
+              <button
+                onClick={handleDownloadJSON}
+                className="btn secondary-btn"
+              >
+                <i className="fa-solid fa-file-code"></i> Download JSON
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Loading State */}
         {isLoading && (
@@ -233,7 +345,7 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ onBackToConfig }) => {
                   return {
                     id: paramId,
                     name: metadata.name,
-                    probability: data.probability * 100, // Convert to percentage
+                    probability: data.probability * 100,
                     threshold: configuration.thresholds[paramId] || 0,
                     min: data.minValue,
                     max: data.maxValue,
@@ -248,6 +360,8 @@ const AnalysisPage: React.FC<AnalysisPageProps> = ({ onBackToConfig }) => {
                   <DonutChart
                     parameters={chartData}
                     date={configuration.eventDate}
+                    selectedVariable={selectedChartVariable}
+                    onVariableClick={setSelectedChartVariable}
                   />
                 </div>
               );

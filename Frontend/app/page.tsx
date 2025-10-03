@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import styles from "./page.module.css";
 import LandingPage from "./components/LandingPage";
 import Configuration from "./components/Configuration";
 import Analysis from "./components/AnalysisPage";

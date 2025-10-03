@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import "../style/donutChart.css";
-
 interface WeatherParameter {
   id: string;
   name: string;
@@ -15,9 +14,16 @@ interface WeatherParameter {
 interface DonutChartProps {
   parameters: WeatherParameter[];
   date: string;
+  selectedVariable?: string | null;
+  onVariableClick?: (id: string | null) => void;
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
+const DonutChart: React.FC<DonutChartProps> = ({
+  parameters,
+  date,
+  selectedVariable = null,
+  onVariableClick,
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{
@@ -26,24 +32,32 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
     text: string;
   } | null>(null);
 
-  // Calculate total for percentages
-  const total = parameters.reduce((sum, param) => sum + param.probability, 0);
+  // Create segments directly from probability
+  const allSegments = parameters.map((param) => {
+    const angle = (param.probability / 100) * 360;
 
-  let currentAngle = 0;
-  const segments = parameters.map((param) => {
-    const percentage = (param.probability / total) * 100;
-    const angle = (percentage / 100) * 360;
-
-    const segment = {
+    return {
       ...param,
-      percentage,
-      startAngle: currentAngle,
-      endAngle: currentAngle + angle,
+      percentage: param.probability,
+      startAngle: 0,
+      endAngle: angle,
     };
-
-    currentAngle += angle;
-    return segment;
   });
+
+  // Filter to show only selected or all
+  const segments = selectedVariable
+    ? allSegments.filter((s) => s.id === selectedVariable)
+    : allSegments.map((param, index) => {
+        let currentAngle = 0;
+        for (let i = 0; i < index; i++) {
+          currentAngle += allSegments[i].endAngle;
+        }
+        return {
+          ...param,
+          startAngle: currentAngle,
+          endAngle: currentAngle + param.endAngle,
+        };
+      });
 
   const polarToCartesian = (
     centerX: number,
@@ -108,7 +122,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
 
   const outerRadius = 100;
   const innerRadius = 50;
-  const svgSize = 240; 
+  const svgSize = 240;
 
   function setTooltipAtSvgPoint(
     svgPoint: { x: number; y: number },
@@ -152,60 +166,157 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
             className="donut-svg"
           >
             {segments.map((segment) => {
-              const gapDeg = 0.6;
-              const s = segment.startAngle + gapDeg / 2;
-              const e = segment.endAngle - gapDeg / 2;
-              const d = createArc(s, e, innerRadius, outerRadius);
+              const arcAngle = segment.endAngle - segment.startAngle;
+              const isFullCircle = arcAngle >= 359.99;
+
+              // Create the filled portion (probability)
+              let filledPathData;
+              if (isFullCircle) {
+                const topOuter = polarToCartesian(0, 0, outerRadius, 0);
+                const bottomOuter = polarToCartesian(0, 0, outerRadius, 180);
+                const topInner = polarToCartesian(0, 0, innerRadius, 0);
+                const bottomInner = polarToCartesian(0, 0, innerRadius, 180);
+
+                filledPathData = [
+                  "M",
+                  topOuter.x,
+                  topOuter.y,
+                  "A",
+                  outerRadius,
+                  outerRadius,
+                  0,
+                  0,
+                  1,
+                  bottomOuter.x,
+                  bottomOuter.y,
+                  "A",
+                  outerRadius,
+                  outerRadius,
+                  0,
+                  0,
+                  1,
+                  topOuter.x,
+                  topOuter.y,
+                  "M",
+                  topInner.x,
+                  topInner.y,
+                  "A",
+                  innerRadius,
+                  innerRadius,
+                  0,
+                  0,
+                  0,
+                  bottomInner.x,
+                  bottomInner.y,
+                  "A",
+                  innerRadius,
+                  innerRadius,
+                  0,
+                  0,
+                  0,
+                  topInner.x,
+                  topInner.y,
+                  "Z",
+                ].join(" ");
+              } else {
+                const gapDeg = selectedVariable ? 0 : 0.6;
+                const s = segment.startAngle + gapDeg / 2;
+                const e = segment.endAngle - gapDeg / 2;
+                filledPathData = createArc(s, e, innerRadius, outerRadius);
+              }
+
+              const isSelected = selectedVariable === segment.id;
 
               return (
-                <path
-                  key={segment.id}
-                  d={d}
-                  fill={segment.color}
-                  className="donut-segment"
-                  strokeWidth={3}
-                  style={{
-                    stroke:
-                      hoveredSegment === segment.id
-                        ? "white"
-                        : "hsl(var(--card))",
-                    opacity:
-                      hoveredSegment === null || hoveredSegment === segment.id
-                        ? 1
-                        : 0.5,
-                  }}
-                  onMouseEnter={(ev) => {
-                    setHoveredSegment(segment.id);
-                    const mid = getArcCenter(
-                      segment.startAngle,
-                      segment.endAngle,
-                      (innerRadius + outerRadius) / 2
-                    );
-                    setTooltipAtSvgPoint(mid, segment.name);
-                    ev.stopPropagation();
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredSegment(null);
-                    setTooltip(null);
-                  }}
-                  onMouseMove={(e) => {
-                    const svgRect =
-                      e.currentTarget.ownerSVGElement!.getBoundingClientRect();
-                    const containerRect =
-                      containerRef.current!.getBoundingClientRect();
-                    const offsetX = e.clientX - containerRect.left;
-                    const offsetY = e.clientY - containerRect.top;
-                    const offset = 12;
-                    setTooltip({
-                      x: offsetX + offset,
-                      y: offsetY + offset,
-                      text: segment.name,
-                    });
-                  }}
-                />
+                <g key={segment.id}>
+                  {selectedVariable && arcAngle < 360 && (
+                    <path
+                      d={createArc(
+                        segment.endAngle,
+                        segment.startAngle + 360,
+                        innerRadius,
+                        outerRadius
+                      )}
+                      fill="hsl(var(--muted) / 0.2)"
+                      stroke="hsl(var(--border))"
+                      strokeWidth={2}
+                      className="donut-segment-unfilled"
+                    />
+                  )}
+
+                  {/* Filled portion (probability) */}
+                  <path
+                    d={filledPathData}
+                    fill={segment.color}
+                    className="donut-segment"
+                    strokeWidth={3}
+                    style={{
+                      stroke: selectedVariable ? "white" : "hsl(var(--card))",
+                      opacity: 1,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (onVariableClick) {
+                        onVariableClick(isSelected ? null : segment.id);
+                      }
+                    }}
+                    onMouseEnter={(ev) => {
+                      setHoveredSegment(segment.id);
+                      const mid = getArcCenter(
+                        segment.startAngle,
+                        segment.endAngle,
+                        (innerRadius + outerRadius) / 2
+                      );
+                      setTooltipAtSvgPoint(mid, segment.name);
+                      ev.stopPropagation();
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredSegment(null);
+                      setTooltip(null);
+                    }}
+                    onMouseMove={(e) => {
+                      const containerRect =
+                        containerRef.current!.getBoundingClientRect();
+                      const offsetX = e.clientX - containerRect.left;
+                      const offsetY = e.clientY - containerRect.top;
+                      const offset = 12;
+                      setTooltip({
+                        x: offsetX + offset,
+                        y: offsetY + offset,
+                        text: segment.name,
+                      });
+                    }}
+                  />
+                </g>
               );
             })}
 
+            <circle cx={0} cy={0} r={innerRadius} fill="hsl(var(--card))" />
+
+            {selectedVariable && segments[0] && (
+              <>
+                <text
+                  x={0}
+                  y={-5}
+                  textAnchor="middle"
+                  fill="hsl(var(--foreground))"
+                  fontSize="24"
+                  fontWeight="700"
+                >
+                  {segments[0].probability.toFixed(1)}%
+                </text>
+                <text
+                  x={0}
+                  y={15}
+                  textAnchor="middle"
+                  fill="hsl(var(--muted-foreground))"
+                  fontSize="10"
+                  fontWeight="400"
+                >
+                  Probability
+                </text>
+              </>
+            )}
             <circle cx={0} cy={0} r={innerRadius} fill="transparent" />
           </svg>
 
@@ -252,38 +363,46 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
 
         {/* Legend */}
         <div className="legend-column">
-          {segments.map((segment) => (
-            <div
-              key={segment.id}
-              className={`legend-item ${
-                hoveredSegment === segment.id ? "legend-item--hovered" : ""
-              }`}
-              onMouseEnter={() => {
-                setHoveredSegment(segment.id);
-                const mid = getArcCenter(
-                  segment.startAngle,
-                  segment.endAngle,
-                  (innerRadius + outerRadius) / 2
-                );
-                setTooltipAtSvgPoint(mid, segment.name);
-              }}
-              onMouseLeave={() => {
-                setHoveredSegment(null);
-                setTooltip(null);
-              }}
-            >
+          {allSegments.map((segment) => {
+            const isSelected = selectedVariable === segment.id;
+            const shouldDim = selectedVariable && !isSelected;
+
+            return (
               <div
-                className="legend-swatch"
-                style={{ background: segment.color }}
-              />
-              <div style={{ flex: 1 }}>
-                <div className="legend-name">{segment.name}</div>
-                <div className="legend-value">
-                  {segment.probability.toFixed(1)}%
+                key={segment.id}
+                className={`legend-item ${
+                  hoveredSegment === segment.id ? "legend-item--hovered" : ""
+                } ${isSelected ? "legend-item--selected" : ""}`}
+                style={{
+                  opacity: shouldDim ? 0.4 : 1,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  if (onVariableClick) {
+                    onVariableClick(isSelected ? null : segment.id);
+                  }
+                }}
+                onMouseEnter={() => {
+                  setHoveredSegment(segment.id);
+                }}
+                onMouseLeave={() => {
+                  setHoveredSegment(null);
+                  setTooltip(null);
+                }}
+              >
+                <div
+                  className="legend-swatch"
+                  style={{ background: segment.color }}
+                />
+                <div style={{ flex: 1 }}>
+                  <div className="legend-name">{segment.name}</div>
+                  <div className="legend-value">
+                    {segment.probability.toFixed(1)}%
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
