@@ -84,6 +84,11 @@
 .legend-item--hovered {
   background: hsl(var(--card) / 0.5);
 }
+.legend-item--selected {
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: calc(var(--radius) / 3);
+}
 
 .legend-swatch {
   width: 16px;
@@ -107,4 +112,11 @@
     flex-direction: column;
     gap: 1.5rem;
   }
+}
+.donut-svg text {
+  user-select: none;
+  pointer-events: none;
+}
+.donut-segment-unfilled {
+  pointer-events: none;
 }

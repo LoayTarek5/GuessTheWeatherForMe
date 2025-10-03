@@ -32,8 +32,6 @@ const Configuration: React.FC<ConfigurationProps> = ({
   const [showMapTab, setShowMapTab] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [apiError, setApiError] = useState<string | null>(null);
-
-  const mapRef = useRef<HTMLDivElement | null>(null);
   const position =
     latitude &&
     longitude &&

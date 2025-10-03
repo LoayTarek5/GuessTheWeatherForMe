@@ -1,17 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Types
-interface WeatherVariable {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-  unit: string;
-  defaultThreshold: number;
-}
-
 interface ConfigurationData {
   selectedWeatherVars: Record<string, boolean>;
   thresholds: Record<string, number>;
@@ -56,7 +45,6 @@ const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 // Storage Keys
 const STORAGE_KEY = "weather_analysis_config";
 const ANALYSIS_KEY = "weather_analysis_data";
-const PAGE_STATE_KEY = "weather_page_state";
 
 const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
   if (typeof window === "undefined") return defaultValue;
@@ -176,10 +164,8 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
         parameters: parameters,
       };
 
-      console.log("Fetching analysis with payload:", payload);
-
       // Call your actual API endpoint
-      const response = await fetch("http://127.0.0.1:8000/WeatherQuery", {
+      const response = await fetch("https://per-merry-nightlife-premiere.trycloudflare.com/WeatherQuery", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
