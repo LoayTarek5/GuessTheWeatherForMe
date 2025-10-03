@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+#  backend:
+#    image: gtw-backend:latest
+#    container_name: backend
+#    expose:
+#      - "8000"   # expose only inside docker network
+#    networks:
+#      - appnet
+
+  frontend:
+    image: gtw-frontend:latest
+    container_name: frontend
+    expose:
+      - "3000"
+    networks:
+      - appnet
+
+  cloudflared-frontend:
+    image: cloudflare/cloudflared:latest
+    container_name: weather_tunnel_frontend
+    command: tunnel --url http://frontend:3000
+    depends_on:
+      - frontend
+    networks:
+      - appnet
+
+#  cloudflared-backend:
+#    image: cloudflare/cloudflared:latest
+#    container_name: weather_tunnel_backend
+#    command: tunnel --url http://backend:8000
+#    depends_on:
+#      - backend
+#    networks:
+#      - appnet
+
+networks:
+  appnet:
+    driver: bridge
