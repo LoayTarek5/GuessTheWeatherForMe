@@ -1,13 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class VariableData(BaseModel):
-    Mean: float = 0
-    Probability: float = 0
-    ExponentialSmoothingPrediction: float = 0
-    PreviousDates: dict[str, float] = 0
-    MinValue: float = 0
-    MaxValue: float = 0
+    mean: float = 0
+    probability: float = 0
+    forecastPrediction: float = 0
+    previousDates: dict[str, float] = Field(default_factory=dict)
+    min: float = 0
+    max: float = 0
 
 
 class WeatherResponse(BaseModel):
