@@ -160,12 +160,10 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
     setAnalysisData(null);
 
     try {
-      // Prepare API request payload according to your API spec
       const selectedVars = Object.keys(
         configuration.selectedWeatherVars
       ).filter((key) => configuration.selectedWeatherVars[key]);
 
-      // Build parameters object with thresholds
       const parameters: Record<string, number> = {};
       selectedVars.forEach((varId) => {
         parameters[varId] = configuration.thresholds[varId] || 0;
@@ -181,7 +179,7 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("Fetching analysis with payload:", payload);
 
       // Call your actual API endpoint
-      const response = await fetch("/api/nasa-proxy", {
+      const response = await fetch("http://127.0.0.1:8000/WeatherQuery", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -8,9 +8,16 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
 from Analysis.Analysis import get_result
 from NasaAPI.GetReadyPowerResponse import GetReadyPowerApiResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or ["http://localhost:3000"]
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup():
@@ -30,14 +37,14 @@ async def ConstructWeatherQuery(weatherRequest: WeatherRequest):
 
     # Call Get Ready Power Response
     nasa_response = await GetReadyPowerApiResponse(
-        weatherRequest.futureDate,
+        weatherRequest.date,
         weatherRequest.longitude,
         weatherRequest.latitude,
         weatherRequest.parameters
     )
 
     # Analysis
-    final_result = get_result(nasa_response, weatherRequest.futureDate, weatherRequest.parameters)
+    final_result = get_result(nasa_response, weatherRequest.date, weatherRequest.parameters)
 
     response = WeatherResponse(Data=final_result, Success=True)
 

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class WeatherRequest(BaseModel):
-    futureDate: str
+    date: str
     longitude: float
     latitude: float
     parameters: dict[str, float]
