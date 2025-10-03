@@ -64,6 +64,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
     innerRadius: number,
     outerRadius: number
   ) => {
+    // Prevent invalid arcs
     if (endAngle <= startAngle) return "";
 
     const start = polarToCartesian(0, 0, outerRadius, endAngle);
@@ -133,20 +134,24 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
     <div ref={containerRef} className="donut-card">
       <h2 className="donut-title">Threshold Probability</h2>
       <p className="donut-subtitle">
-        Probability of thresholds being exceeded on{' '}
-        {new Date(date).toLocaleDateString('en-US', {
-          month: 'numeric',
-          day: 'numeric',
-          year: 'numeric',
+        Probability of thresholds being exceeded on{" "}
+        {new Date(date).toLocaleDateString("en-US", {
+          month: "numeric",
+          day: "numeric",
+          year: "numeric",
         })}
       </p>
 
       <div className="donut-row">
         {/* Donut Chart */}
         <div className="donut-svg-wrapper">
-          <svg width={svgSize} height={svgSize} viewBox="-120 -120 240 240" className="donut-svg">
+          <svg
+            width={svgSize}
+            height={svgSize}
+            viewBox="-120 -120 240 240"
+            className="donut-svg"
+          >
             {segments.map((segment) => {
-              // create small gap visually by shrinking angles a hair (optional)
               const gapDeg = 0.6;
               const s = segment.startAngle + gapDeg / 2;
               const e = segment.endAngle - gapDeg / 2;
@@ -160,12 +165,22 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
                   className="donut-segment"
                   strokeWidth={3}
                   style={{
-                    stroke: hoveredSegment === segment.id ? 'white' : 'hsl(var(--card))',
-                    opacity: hoveredSegment === null || hoveredSegment === segment.id ? 1 : 0.5,
+                    stroke:
+                      hoveredSegment === segment.id
+                        ? "white"
+                        : "hsl(var(--card))",
+                    opacity:
+                      hoveredSegment === null || hoveredSegment === segment.id
+                        ? 1
+                        : 0.5,
                   }}
                   onMouseEnter={(ev) => {
                     setHoveredSegment(segment.id);
-                    const mid = getArcCenter(segment.startAngle, segment.endAngle, (innerRadius + outerRadius) / 2);
+                    const mid = getArcCenter(
+                      segment.startAngle,
+                      segment.endAngle,
+                      (innerRadius + outerRadius) / 2
+                    );
                     setTooltipAtSvgPoint(mid, segment.name);
                     ev.stopPropagation();
                   }}
@@ -174,12 +189,18 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
                     setTooltip(null);
                   }}
                   onMouseMove={(e) => {
-                    const svgRect = e.currentTarget.ownerSVGElement!.getBoundingClientRect();
-                    const containerRect = containerRef.current!.getBoundingClientRect();
+                    const svgRect =
+                      e.currentTarget.ownerSVGElement!.getBoundingClientRect();
+                    const containerRect =
+                      containerRef.current!.getBoundingClientRect();
                     const offsetX = e.clientX - containerRect.left;
                     const offsetY = e.clientY - containerRect.top;
                     const offset = 12;
-                    setTooltip({ x: offsetX + offset, y: offsetY + offset, text: segment.name });
+                    setTooltip({
+                      x: offsetX + offset,
+                      y: offsetY + offset,
+                      text: segment.name,
+                    });
                   }}
                 />
               );
@@ -197,20 +218,30 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
               {(() => {
                 const param = segments.find((s) => s.id === hoveredSegment);
                 if (!param) {
-                  return <div className="donut-tooltip-title">{tooltip.text}</div>;
+                  return (
+                    <div className="donut-tooltip-title">{tooltip.text}</div>
+                  );
                 }
                 return (
                   <>
                     <div className="donut-tooltip-title">{param.name}</div>
                     <div className="donut-tooltip-body">
                       <div>
-                        Threshold Probability: <strong>{param.probability.toFixed(1)}%</strong>
+                        Threshold Probability:{" "}
+                        <strong>{param.probability.toFixed(1)}%</strong>
                       </div>
                       <div>
-                        Threshold: <strong>{param.threshold} {param.unit}</strong>
+                        Threshold:{" "}
+                        <strong>
+                          {param.threshold} {param.unit}
+                        </strong>
                       </div>
-                      <div className="donut-tooltip-meta">Min: {param.min.toFixed(1)} {param.unit}</div>
-                      <div className="donut-tooltip-meta">Max: {param.max.toFixed(1)} {param.unit}</div>
+                      <div className="donut-tooltip-meta">
+                        Min: {param.min.toFixed(1)} {param.unit}
+                      </div>
+                      <div className="donut-tooltip-meta">
+                        Max: {param.max.toFixed(1)} {param.unit}
+                      </div>
                     </div>
                   </>
                 );
@@ -224,10 +255,16 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
           {segments.map((segment) => (
             <div
               key={segment.id}
-              className={`legend-item ${hoveredSegment === segment.id ? 'legend-item--hovered' : ''}`}
+              className={`legend-item ${
+                hoveredSegment === segment.id ? "legend-item--hovered" : ""
+              }`}
               onMouseEnter={() => {
                 setHoveredSegment(segment.id);
-                const mid = getArcCenter(segment.startAngle, segment.endAngle, (innerRadius + outerRadius) / 2);
+                const mid = getArcCenter(
+                  segment.startAngle,
+                  segment.endAngle,
+                  (innerRadius + outerRadius) / 2
+                );
                 setTooltipAtSvgPoint(mid, segment.name);
               }}
               onMouseLeave={() => {
@@ -235,10 +272,15 @@ const DonutChart: React.FC<DonutChartProps> = ({ parameters, date }) => {
                 setTooltip(null);
               }}
             >
-              <div className="legend-swatch" style={{ background: segment.color }} />
+              <div
+                className="legend-swatch"
+                style={{ background: segment.color }}
+              />
               <div style={{ flex: 1 }}>
                 <div className="legend-name">{segment.name}</div>
-                <div className="legend-value">{segment.probability.toFixed(1)}%</div>
+                <div className="legend-value">
+                  {segment.probability.toFixed(1)}%
+                </div>
               </div>
             </div>
           ))}

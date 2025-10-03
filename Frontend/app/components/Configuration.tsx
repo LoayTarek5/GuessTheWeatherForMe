@@ -231,15 +231,12 @@ const Configuration: React.FC<ConfigurationProps> = ({
   };
 
   const handleAnalyze = async () => {
-    // Clear previous API errors
     setApiError(null);
 
-    // Validate inputs
     if (!validateInputs()) {
       return;
     }
 
-    // Fetch analysis data from API
     const success = await fetchAnalysisData();
 
     if (success) {
