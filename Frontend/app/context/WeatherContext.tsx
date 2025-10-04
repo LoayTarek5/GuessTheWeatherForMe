@@ -165,7 +165,7 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       // Call your actual API endpoint
-      const response = await fetch("https://per-merry-nightlife-premiere.trycloudflare.com/WeatherQuery", {
+      const response = await fetch("http://127.0.0.1:8000/WeatherQuery", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
